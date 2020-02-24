@@ -53,23 +53,19 @@ public class Storage {
 
 	public void addClientSession(String user, Connection connection) {
 		clients.put(user, new ClientSession(user, connection));
-		// TODO: add corresponding client session to the storage
 	}
 
 	public void removeClientSession(String user) {
 		clients.remove(user);
-		// TODO: remove client session for user from the storage
 	}
 
 	public void createTopic(String topic) {
 		Set<String> subscribers = new HashSet<>();
 		subscriptions.put(topic, subscribers);
-		// TODO: create topic in the storage
 	}
 
 	public void deleteTopic(String topic) {
 		subscriptions.remove(topic);
-		// TODO: delete topic from the storage
 	}
 
 	public void addSubscriber(String user, String topic) {
@@ -77,8 +73,7 @@ public class Storage {
 		hs.add(user);
 		subscriptions.put(topic,hs);
 
-		// TODO: add the user as subscriber to the topic
-		
+
 
 	}
 
@@ -86,7 +81,5 @@ public class Storage {
 		HashSet<String> hs = (HashSet<String>) getSubscribers(topic);
 		hs.remove(user);
 		subscriptions.put(topic,hs);
-		// TODO: remove the user as subscriber to the topic
-
 	}
 }
