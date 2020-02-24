@@ -1,6 +1,7 @@
 package no.hvl.dat110.broker;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -51,49 +52,41 @@ public class Storage {
 	}
 
 	public void addClientSession(String user, Connection connection) {
-
+		clients.put(user, new ClientSession(user, connection));
 		// TODO: add corresponding client session to the storage
-		
-		throw new UnsupportedOperationException(TODO.method());
-		
 	}
 
 	public void removeClientSession(String user) {
-
+		clients.remove(user);
 		// TODO: remove client session for user from the storage
-
-		throw new UnsupportedOperationException(TODO.method());
-		
 	}
 
 	public void createTopic(String topic) {
-
+		Set<String> subscribers = new HashSet<>();
+		subscriptions.put(topic, subscribers);
 		// TODO: create topic in the storage
-
-		throw new UnsupportedOperationException(TODO.method());
-	
 	}
 
 	public void deleteTopic(String topic) {
-
+		subscriptions.remove(topic);
 		// TODO: delete topic from the storage
-
-		throw new UnsupportedOperationException(TODO.method());
-		
 	}
 
 	public void addSubscriber(String user, String topic) {
+		HashSet<String> hs = (HashSet<String>) getSubscribers(topic);
+		hs.add(user);
+		subscriptions.put(topic,hs);
 
 		// TODO: add the user as subscriber to the topic
 		
-		throw new UnsupportedOperationException(TODO.method());
-		
+
 	}
 
 	public void removeSubscriber(String user, String topic) {
-
+		HashSet<String> hs = (HashSet<String>) getSubscribers(topic);
+		hs.remove(user);
+		subscriptions.put(topic,hs);
 		// TODO: remove the user as subscriber to the topic
 
-		throw new UnsupportedOperationException(TODO.method());
 	}
 }
