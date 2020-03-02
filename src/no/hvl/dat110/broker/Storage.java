@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import no.hvl.dat110.common.TODO;
 import no.hvl.dat110.common.Logger;
+import no.hvl.dat110.messages.Message;
 import no.hvl.dat110.messagetransport.Connection;
 
 public class Storage {
@@ -14,6 +15,7 @@ public class Storage {
 	// data structure for managing subscriptions
 	// maps from user to set of topics subscribed to by user
 	protected ConcurrentHashMap<String, Set<String>> subscriptions;
+	protected ConcurrentHashMap<String, Set<Message>> bufferedMessages;
 	
 	// data structure for managing currently connected clients
 	// maps from user to corresponding client session object
@@ -21,8 +23,26 @@ public class Storage {
 	protected ConcurrentHashMap<String, ClientSession> clients;
 
 	public Storage() {
-		subscriptions = new ConcurrentHashMap<String, Set<String>>();
-		clients = new ConcurrentHashMap<String, ClientSession>();
+		subscriptions = new ConcurrentHashMap<>();
+		clients = new ConcurrentHashMap<>();
+		bufferedMessages = new ConcurrentHashMap<>();
+	}
+	public Set<Message> getBufferedMessages(String user){
+		return bufferedMessages.get(user);
+	}
+
+	public void addBufferedMessages(String user, Message message){
+		Set<Message> m;
+		if (!bufferedMessages.containsKey((user))) {
+			m = new HashSet<>();
+		} else {
+			m = bufferedMessages.get((user));
+		}
+		m.add(message);
+		bufferedMessages.put(user, m);
+	}
+	public void clearBufferedMessages(String user){
+		bufferedMessages.remove(user);
 	}
 
 	public Collection<ClientSession> getSessions() {

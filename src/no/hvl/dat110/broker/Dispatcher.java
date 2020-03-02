@@ -94,6 +94,13 @@ public class Dispatcher extends Stopable {
 		Logger.log("onConnect:" + msg.toString());
 
 		storage.addClientSession(user, connection);
+		ClientSession cs = storage.getSession(user);
+
+		Set<Message> messages = storage.getBufferedMessages(user);
+		if (messages != null) {
+			messages.forEach(m -> cs.send(m));
+			storage.clearBufferedMessages(user);
+		}
 
 	}
 
@@ -152,8 +159,12 @@ public class Dispatcher extends Stopable {
 
 		HashSet<String> subscribers = (HashSet<String>) storage.getSubscribers(msg.getTopic());
 
-		for (String subs : subscribers){
-			storage.getSession(subs).send(msg);
+		for (String sub : subscribers){
+			if(storage.getSession(sub) == null){
+				storage.addBufferedMessages(sub, msg);
+			} else {
+				storage.getSession(sub).send(msg);
+			}
 		}
 	}
 }
